@@ -9,6 +9,8 @@
   "author": "znnz",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.10.4"
+    "crypto": "0.0.3",
+    "express": "^4.10.4",
+    "express3-handlebars": "^0.5.2"
   }
 }
