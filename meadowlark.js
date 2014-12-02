@@ -16,7 +16,8 @@ app.set('etag',function(body,encoding){
 
 
 app.use(function (req,res,next) {
-   console.log(req.ip);
+    console.log(req.ip);
+    res.locals.showTests=app.get('env')!=='production' && req.query.test=='1';
     next();
 });
 app.get('/',function(req,res){
@@ -28,7 +29,7 @@ app.get('/about',function(req,res){
                     "Do not fear what you don't know.","You will have a pleasant surprise.",
                     "Whenever possible, keep it simple"];
     var randomFortune=fortunes[Math.floor(Math.random()*fortunes.length)];
-    res.render('about',{fortune:randomFortune});
+    res.render('about',{fortune:randomFortune,pageTestScript:'/qa/tests-about.js'});
 });
 
 app.use(function(req,res,next){

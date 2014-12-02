@@ -12,5 +12,9 @@
     "crypto": "0.0.3",
     "express": "^4.10.4",
     "express3-handlebars": "^0.5.2"
+  },
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.0.1"
   }
 }
