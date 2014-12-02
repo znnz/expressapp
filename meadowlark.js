@@ -10,6 +10,7 @@ app.engine('handlebars',handlebars.engine);
 app.use(express.static(__dirname+'/public'));
 app.set('view engine','handlebars');
 app.set('port',process.env.PORT || 3000);
+app.disable('x-powered-by');
 app.set('etag',function(body,encoding){
    return require('crypto').createHash('md5').update(body).digest('hex');
 });
@@ -30,6 +31,13 @@ app.get('/about',function(req,res){
                     "Whenever possible, keep it simple"];
     var randomFortune=fortunes[Math.floor(Math.random()*fortunes.length)];
     res.render('about',{fortune:randomFortune,pageTestScript:'/qa/tests-about.js'});
+});
+
+app.get('/tours/hood-river',function(req,res){
+   res.render('tours/hood-river');
+});
+app.get('/tours/request-group-rate',function(req,res){
+   res.render('tours/request-group-rate');
 });
 
 app.use(function(req,res,next){
