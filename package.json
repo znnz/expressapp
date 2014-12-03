@@ -2,9 +2,9 @@
   "name": "expressapp",
   "version": "0.0.1",
   "description": "ExpressApp",
-  "main": "index.js",
+  "main": "meadowlark.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start":"node meadowlark.js"
   },
   "author": "znnz",
   "license": "MIT",
