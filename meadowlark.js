@@ -3,6 +3,13 @@
  */
 
 var express=require('express');
+var fs=require('fs');
+var http=require('http');
+var https=require('https');
+
+var privateKey=fs.readFileSync('sslcert/server.key','utf-8');
+var certificate=fs.readFileSync('sslcert/server.crt','utf-8');
+var credentials={key:privateKey,cert:certificate};
 var app=express();
 var handlebars=require('express3-handlebars').create({defaultLayout:'main'});
 
@@ -51,6 +58,11 @@ app.use(function(err,req,res,next){
     res.render('500');
 });
 
+http.createServer(app).listen(3000);
+https.createServer(credentials,app).listen(8443);
+
+/*
 app.listen(app.get('port'),function(){
    console.log('Express started on http://localhost:'+app.get('port')+'; press Ctrl-C to terminate');
 });
+*/
