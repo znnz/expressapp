@@ -6,6 +6,9 @@ var express=require('express');
 var fs=require('fs');
 var http=require('http');
 var https=require('https');
+//var cookieParser=require('cookie-parser');
+var session=require('express-session');
+var uuid=require('node-uuid');
 
 var privateKey=fs.readFileSync('sslcert/server.key','utf-8');
 var certificate=fs.readFileSync('sslcert/server.crt','utf-8');
@@ -14,6 +17,16 @@ var app=express();
 var handlebars=require('express3-handlebars').create({defaultLayout:'main'});
 
 app.engine('handlebars',handlebars.engine);
+//app.use(cookieParser());
+app.use(session({
+    genid:function(req){
+      return uuid.v1();
+    },
+    secret:'keyboard cat',
+    resave:false,
+    saveUnitialized:true,
+    cookie:{secure:true, maxAge:60000}
+}));
 app.use(express.static(__dirname+'/public'));
 app.set('view engine','handlebars');
 app.set('port',process.env.PORT || 3000);
@@ -27,6 +40,12 @@ app.use(function (req,res,next) {
     console.log(req.ip);
     res.locals.showTests=app.get('env')!=='production' && req.query.test=='1';
     next();
+});
+app.get('/headers',function(req,res){
+    res.set('Content-Type','text/plain');
+    var s='';
+    for(var name in req.headers) s+=name+":  "+req,headers[name]+'\n';
+    res.send();
 });
 app.get('/',function(req,res){
     res.render('home');
@@ -45,6 +64,16 @@ app.get('/tours/hood-river',function(req,res){
 });
 app.get('/tours/request-group-rate',function(req,res){
    res.render('tours/request-group-rate');
+});
+
+app.get('/greeting',function(req,res){
+    req.session.hello='hello from session';
+   res.render('about',{
+       message:'welcome',
+       style:req.query.style,
+       cookies:req.session.cookie.maxAge,
+       session:req.session.hello
+   }) ;
 });
 
 app.use(function(req,res,next){
