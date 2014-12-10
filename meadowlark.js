@@ -14,7 +14,16 @@ var privateKey=fs.readFileSync('sslcert/server.key','utf-8');
 var certificate=fs.readFileSync('sslcert/server.crt','utf-8');
 var credentials={key:privateKey,cert:certificate};
 var app=express();
-var handlebars=require('express3-handlebars').create({defaultLayout:'main'});
+var handlebars=require('express3-handlebars').create({
+    defaultLayout:'main',
+    helpers:{
+        section:function(name,options){
+            if(!this._sections) this._sections={};
+            this._sections[name]=options.fn(this);
+            return null;
+        }
+    }
+});
 
 app.engine('handlebars',handlebars.engine);
 //app.use(cookieParser());
@@ -38,6 +47,8 @@ app.set('etag',function(body,encoding){
 
 app.use(function (req,res,next) {
     console.log(req.ip);
+    if(!res.locals.partials) res.locals.partials={};
+    res.locals.partials.weather=getWeatherData();
     if(req.url.match(/^\/(css|js|img|font)\/.+/)){
         res.set('Cache-Control','public,max-age=3600');
     }
@@ -87,6 +98,21 @@ app.get('/no-layout',function(req,res){
 
 app.get('/custom-layout',function(req,res){
    res.render('custom-layout',{layout:'custom'});
+});
+app.get('/jquery-test',function(req,res){
+    console.log("------jquery- test-------");
+   res.render('jquery-test');
+});
+app.get('/nursery-rhyme',function(req,res){
+    res.render('nursery-rhyme');
+});
+app.get('/data/nursery-rhyme',function(req,res){
+    res.json({
+       animal:'squirrel',
+        bodyPart:'tail',
+        adjective:'bushy',
+        noun:'heck'
+    });
 });
 
 var tours=[
@@ -146,6 +172,37 @@ app.delete('/api/tour/:id',function(req,res){
         res.json({error:'No such tour exists.'});
     }
 });
+
+
+function getWeatherData(){
+    return {
+        locations: [
+            {
+                name: 'Portland',
+                forecastUrl: 'http://www.wunderground.com/US/OR/Portland.html',
+                iconUrl: 'http://icons-ak.wxug.com/i/c/k/cloudy.gif',
+                weather: 'Overcast',
+                temp: '54.1 F (12.3 C)'
+            },
+            {
+                name: 'Bend',
+                forecastUrl: 'http://www.wunderground.com/US/OR/Bend.html',
+                iconUrl: 'http://icons-ak.wxug.com/i/c/k/partlycloudy.gif',
+                weather: 'Partly Cloudy',
+                temp: '55.0 F (12.8 C)'
+            },
+            {
+                name: 'Manzanita',
+                forecastUrl: 'http://www.wunderground.com/US/OR/Manzanita.html',
+                iconUrl: 'http://icons-ak.wxug.com/i/c/k/rain.gif',
+                weather: 'Light Rain',
+                temp: '55.0 F (12.8 C)'
+            },
+        ]
+    };
+}
+
+
 app.use(function(req,res,next){
     res.status(404);
     res.render('404');
