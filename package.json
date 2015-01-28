@@ -11,7 +11,8 @@
   "dependencies": {
     "crypto": "0.0.3",
     "express": "^4.10.4",
-    "express3-handlebars": "^0.5.2"
+    "express3-handlebars": "^0.5.2",
+    "le_node":"0.2.1"
   },
   "devDependencies": {
     "chai": "^1.10.0",

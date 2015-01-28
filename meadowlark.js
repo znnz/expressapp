@@ -43,7 +43,7 @@ app.use(session({
 app.use(compression());
 app.use(express.static(__dirname+'/public',{maxAge:86400000}));
 app.set('view engine','handlebars');
-app.set('port',process.env.PORT || 3000);
+app.set('port',process.env.PORT || 80);
 app.disable('x-powered-by');
 app.set('etag',function(body,encoding){
    return require('crypto').createHash('md5').update(body).digest('hex');
@@ -219,7 +219,7 @@ app.use(function(err,req,res,next){
     res.render('500');
 });
 
-http.createServer(app).listen(3000);
+http.createServer(app).listen(80);
 https.createServer(credentials,app).listen(8443);
 
 /*
