@@ -10,9 +10,9 @@ var https=require('https');
 var session=require('express-session');
 var uuid=require('node-uuid');
 var compression=require('compression');
-var httpProxy=require('http-proxy');
+//var httpProxy=require('http-proxy');
 
-httpProxy.createProxyServer({target:'http://localhost:3000'}).listen(8000);
+//httpProxy.createProxyServer({target:'http://localhost:3000'}).listen(8000);
 
 var privateKey=fs.readFileSync('sslcert/server.key','utf-8');
 var certificate=fs.readFileSync('sslcert/server.crt','utf-8');
@@ -43,7 +43,7 @@ app.use(session({
 app.use(compression());
 app.use(express.static(__dirname+'/public',{maxAge:86400000}));
 app.set('view engine','handlebars');
-app.set('port',process.env.PORT || 80);
+app.set('port',process.env.PORT || 3000);
 app.disable('x-powered-by');
 app.set('etag',function(body,encoding){
    return require('crypto').createHash('md5').update(body).digest('hex');
@@ -219,7 +219,7 @@ app.use(function(err,req,res,next){
     res.render('500');
 });
 
-http.createServer(app).listen(80);
+http.createServer(app).listen(3000);
 https.createServer(credentials,app).listen(8443);
 
 /*
