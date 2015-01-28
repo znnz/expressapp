@@ -8,6 +8,10 @@
   },
   "author": "znnz",
   "license": "MIT",
+  "engines":{
+    "node":"0.10.x",
+    "npm":"2.1.x"
+  },
   "dependencies": {
     "crypto": "0.0.3",
     "express": "^4.10.4",
